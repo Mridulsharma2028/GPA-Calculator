@@ -64,6 +64,4 @@ If the result is > 10.0, the system flags the goal as mathematically impossible,
 * **Adaptive Theme:** Supports both High-Contrast Dark mode and a Clean Light mode.
 * **Micro-interactions:** Subtle hover animations and floating profile elements for a premium feel.
 
----
 
-**Next Step:** Would you like me to help you integrate a backend (like Firebase) to save this data permanently across different devices?
