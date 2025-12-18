@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradians Elite | Academic Intelligence Suite</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    colors: { emerald: { 500: '#10b981', 600: '#059669' }, dark: '#050505' }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.02); 
+            backdrop-filter: blur(20px); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+        }
+        .light .glass-card { 
+            background: rgba(255, 255, 255, 0.7); 
+            border: 1px solid rgba(0, 0, 0, 0.05); 
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.05);
+        }
+        .neo-gradient { background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%); }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    </style>
+</head>
+<body class="min-h-screen bg-dark text-slate-200 dark:bg-dark dark:text-slate-200 light:bg-slate-50 light:text-slate-900">
+
+    <nav class="fixed top-0 z-50 w-full border-b border-white/5 bg-black/40 backdrop-blur-xl px-8 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-10">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 neo-gradient rounded-lg animate-pulse"></div>
+                <h1 class="text-2xl font-800 tracking-tighter text-white">gradians<span class="text-emerald-500">.</span></h1>
+            </div>
+            <div class="hidden lg:flex gap-8 text-sm font-semibold opacity-70">
+                <button onclick="switchTab('calculator')" class="hover:text-emerald-400 transition-all">Smart Calculator</button>
+                <button onclick="switchTab('estimator')" class="hover:text-emerald-400 transition-all">Predictive AI</button>
+                <button onclick="switchTab('analytics')" class="hover:text-emerald-400 transition-all">Deep Insights</button>
+            </div>
+        </div>
+        <div class="flex items-center gap-5">
+            <div id="quote-box" class="hidden xl:block text-xs font-medium italic opacity-50 max-w-xs text-right">
+                "The best way to predict the future is to create it."
+            </div>
+            <button onclick="toggleTheme()" class="p-2.5 rounded-xl bg-white/5 border border-white/10 hover:scale-110 transition">
+                <i data-lucide="sun" class="hidden dark:block w-5 h-5 text-yellow-400"></i>
+                <i data-lucide="moon" class="block dark:hidden w-5 h-5 text-slate-600"></i>
+            </button>
+            <div id="auth-section">
+                <button onclick="handleGoogleLogin()" class="neo-gradient px-5 py-2.5 rounded-xl text-black font-bold text-sm hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] transition">
+                    Sync Data
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 pt-28 px-6 pb-12">
+        
+        <aside class="lg:col-span-3 space-y-6">
+            <div class="glass-card rounded-3xl p-6 relative overflow-hidden group">
+                <div class="absolute -right-4 -top-4 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition"></div>
+                <h2 class="text-xs font-bold uppercase tracking-[0.2em] mb-6 opacity-40">Intelligence Suite</h2>
+                <nav class="space-y-2">
+                    <button onclick="switchTab('calculator')" class="w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 transition group">
+                        <i data-lucide="layout-dashboard" class="w-5 h-5 text-emerald-500"></i>
+                        <span class="font-bold">Dashboard</span>
+                    </button>
+                    <button onclick="openImportModal()" class="w-full flex items-center gap-4 p-4 rounded-2xl bg-blue-500/5 border border-blue-500/10 hover:bg-blue-500/10 transition">
+                        <i data-lucide="wand-2" class="w-5 h-5 text-blue-400"></i>
+                        <span class="font-bold text-blue-400">Smart Import</span>
+                    </button>
+                    <hr class="border-white/5 my-4">
+                    <button onclick="clearAllData()" class="w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-red-500/5 text-red-400/60 hover:text-red-400 transition">
+                        <i data-lucide="refresh-ccw" class="w-5 h-5"></i>
+                        <span class="font-bold">Reset Deck</span>
+                    </button>
+                </nav>
+            </div>
+
+            <div class="glass-card rounded-3xl p-8 border-b-4 border-emerald-500 animate-float">
+                <div class="relative w-20 h-20 mx-auto mb-4">
+                    <div class="absolute inset-0 neo-gradient blur-xl opacity-20 rounded-full"></div>
+                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Mridul" class="relative rounded-2xl border-2 border-emerald-500/30" alt="Avatar">
+                </div>
+                <h3 class="text-xl font-800 text-center">Mridul Sharma</h3>
+                <p class="text-[10px] text-center uppercase tracking-widest text-emerald-500 font-bold">VIT & IIT Student</p>
+            </div>
+        </aside>
+
+        <section class="lg:col-span-9" id="report-area">
+            
+            <div id="calculator-tab" class="tab-content space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="glass-card p-6 rounded-3xl border-t-2 border-emerald-500">
+                        <p class="text-xs font-bold opacity-40 mb-1">LIVE SGPA</p>
+                        <h4 id="sgpa-display" class="text-5xl font-900 text-white">0.00</h4>
+                    </div>
+                    <div class="glass-card p-6 rounded-3xl border-t-2 border-blue-500">
+                        <p class="text-xs font-bold opacity-40 mb-1">TOTAL CREDITS</p>
+                        <h4 id="total-credits-display" class="text-5xl font-900 text-white">0</h4>
+                    </div>
+                    <div class="glass-card p-6 rounded-3xl border-t-2 border-purple-500">
+                        <p class="text-xs font-bold opacity-40 mb-1">STATUS</p>
+                        <h4 id="status-display" class="text-2xl font-800 text-emerald-400">Scholar</h4>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-3xl p-8">
+                    <div class="flex justify-between items-center mb-8">
+                        <h2 class="text-2xl font-bold">Course Manifest</h2>
+                        <div class="flex gap-3">
+                            <button onclick="downloadReport()" class="p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10"><i data-lucide="share-2" class="w-5 h-5"></i></button>
+                            <button onclick="addCourseRow()" class="neo-gradient px-6 py-3 rounded-xl text-black font-bold flex items-center gap-2">
+                                <i data-lucide="plus" class="w-5 h-5"></i> Add Course
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="course-list" class="space-y-3">
+                        </div>
+                </div>
+            </div>
+
+            <div id="estimator-tab" class="tab-content hidden space-y-6">
+                <div class="glass-card rounded-[2rem] p-10 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-8 opacity-10"><i data-lucide="brain-circuit" class="w-32 h-32"></i></div>
+                    <h2 class="text-4xl font-900 mb-8 tracking-tight">GPA <span class="text-emerald-500">Forecaster</span></h2>
+                    
+                    <div class="grid md:grid-cols-2 gap-10">
+                        <div class="space-y-6">
+                            <div class="group">
+                                <label class="block text-xs font-bold opacity-40 uppercase mb-2">Current CGPA</label>
+                                <input type="number" id="curr-cgpa" step="0.01" class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl text-2xl font-bold focus:border-emerald-500 outline-none transition">
+                            </div>
+                            <div class="group">
+                                <label class="block text-xs font-bold opacity-40 uppercase mb-2">Credits Already Earned</label>
+                                <input type="number" id="curr-credits" class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl text-2xl font-bold focus:border-emerald-500 outline-none transition">
+                            </div>
+                        </div>
+                        <div class="space-y-6">
+                            <div class="group">
+                                <label class="block text-xs font-bold opacity-40 uppercase mb-2">Target CGPA Goal</label>
+                                <input type="number" id="target-cgpa" step="0.01" class="w-full bg-emerald-500/10 border border-emerald-500/30 p-5 rounded-2xl text-2xl font-bold focus:border-emerald-500 outline-none transition">
+                            </div>
+                            <div class="group">
+                                <label class="block text-xs font-bold opacity-40 uppercase mb-2">Remaining Credits</label>
+                                <input type="number" id="remain-credits" class="w-full bg-white/5 border border-white/10 p-5 rounded-2xl text-2xl font-bold focus:border-emerald-500 outline-none transition">
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="calculateTarget()" class="w-full mt-12 neo-gradient py-6 rounded-3xl text-black text-xl font-900 shadow-2xl">Run Simulation</button>
+                </div>
+                <div id="estimate-result" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+            </div>
+
+            <div id="analytics-tab" class="tab-content hidden">
+                <div class="grid lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 glass-card p-8 rounded-3xl">
+                        <h3 class="text-xl font-bold mb-6">Cumulative Growth</h3>
+                        <canvas id="trendChart" height="250"></canvas>
+                    </div>
+                    <div class="glass-card p-8 rounded-3xl">
+                        <h3 class="text-xl font-bold mb-6">Subject Balance</h3>
+                        <canvas id="gradeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="import-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] hidden flex items-center justify-center p-6">
+        <div class="glass-card max-w-xl w-full p-10 rounded-[2.5rem] border border-white/20">
+            <h3 class="text-3xl font-900 mb-2">AI Bulk Import</h3>
+            <p class="opacity-50 mb-6">Enter: Course Name, Credits, Grade (one per line)</p>
+            <textarea id="import-area" rows="6" class="w-full bg-white/5 border border-white/10 rounded-3xl p-6 outline-none focus:border-emerald-500 font-mono text-sm mb-6" placeholder="Applied Physics, 4, 10&#10;Digital Logic, 3, 9"></textarea>
+            <div class="flex gap-4">
+                <button onclick="processImport()" class="flex-1 neo-gradient py-4 rounded-2xl text-black font-bold">Inject Courses</button>
+                <button onclick="closeImportModal()" class="px-8 py-4 bg-white/5 rounded-2xl font-bold">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Core State
+        let courses = JSON.parse(localStorage.getItem('gradians_data')) || [
+            { id: 1, name: "Neural Networks", credits: 4, grade: 10, type: "Theory" },
+            { id: 2, name: "Advanced Lab", credits: 2, grade: 9, type: "Lab" }
+        ];
+
+        const quotes = [
+            "Your GPA doesn't define you, but your work ethic does.",
+            "Success is the sum of small efforts repeated day in and day out.",
+            "Don't decrease the goal, increase the effort.",
+            "The expert in everything was once a beginner."
+        ];
+
+        function init() {
+            lucide.createIcons();
+            renderCourses();
+            updateQuote();
+            autoCalculate();
+        }
+
+        function updateQuote() {
+            document.getElementById('quote-box').innerText = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
+        }
+
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`${tabId}-tab`).classList.remove('hidden');
+            if(tabId === 'analytics') setTimeout(initCharts, 100);
+        }
+
+        function renderCourses() {
+            const container = document.getElementById('course-list');
+            container.innerHTML = courses.map(c => `
+                <div class="flex flex-wrap md:flex-nowrap items-center gap-4 p-4 glass-card rounded-2xl group hover:border-emerald-500/50 transition-all">
+                    <div class="flex-1 min-w-[200px]">
+                        <input type="text" value="${c.name}" onchange="updateCourse(${c.id}, 'name', this.value)" 
+                            class="bg-transparent font-bold text-white w-full border-none outline-none">
+                        <select onchange="updateCourse(${c.id}, 'type', this.value)" class="text-[10px] uppercase font-black tracking-widest bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded">
+                            <option value="Theory" ${c.type === 'Theory' ? 'selected' : ''}>Theory</option>
+                            <option value="Lab" ${c.type === 'Lab' ? 'selected' : ''}>Lab</option>
+                            <option value="Project" ${c.type === 'Project' ? 'selected' : ''}>Project</option>
+                        </select>
+                    </div>
+                    <div class="w-24">
+                        <p class="text-[10px] font-bold opacity-30 mb-1">CREDITS</p>
+                        <input type="number" value="${c.credits}" onchange="updateCourse(${c.id}, 'credits', this.value)" 
+                            class="w-full bg-white/5 p-2 rounded-xl text-center font-bold">
+                    </div>
+                    <div class="w-24">
+                        <p class="text-[10px] font-bold opacity-30 mb-1">GRADE</p>
+                        <input type="number" value="${c.grade}" onchange="updateCourse(${c.id}, 'grade', this.value)" 
+                            class="w-full bg-white/5 p-2 rounded-xl text-center font-bold text-emerald-400">
+                    </div>
+                    <button onclick="removeCourse(${c.id})" class="p-3 text-red-500/20 group-hover:text-red-500 transition">
+                        <i data-lucide="trash-2" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            `).join('');
+            lucide.createIcons();
+            saveData();
+        }
+
+        function autoCalculate() {
+            let pts = 0, crds = 0;
+            courses.forEach(c => { 
+                pts += (parseFloat(c.credits) * parseFloat(c.grade)); 
+                crds += parseFloat(c.credits); 
+            });
+            const sgpa = crds > 0 ? (pts/crds).toFixed(2) : "0.00";
+            document.getElementById('sgpa-display').innerText = sgpa;
+            document.getElementById('total-credits-display').innerText = crds;
+            
+            const status = document.getElementById('status-display');
+            if(sgpa >= 9) { status.innerText = "Elite Scholar"; status.className = "text-2xl font-800 text-emerald-400"; }
+            else if(sgpa >= 8) { status.innerText = "Distinction"; status.className = "text-2xl font-800 text-blue-400"; }
+            else { status.innerText = "On Track"; status.className = "text-2xl font-800 text-purple-400"; }
+        }
+
+        function updateCourse(id, field, val) {
+            const c = courses.find(x => x.id === id);
+            if(c) {
+                c[field] = (field === 'name' || field === 'type') ? val : parseFloat(val || 0);
+                autoCalculate();
+                saveData();
+            }
+        }
+
+        function addCourseRow() {
+            courses.push({ id: Date.now(), name: "New Course", credits: 3, grade: 9, type: "Theory" });
+            renderCourses();
+            autoCalculate();
+        }
+
+        function removeCourse(id) {
+            courses = courses.filter(c => c.id !== id);
+            renderCourses();
+            autoCalculate();
+        }
+
+        function saveData() { localStorage.setItem('gradians_data', JSON.stringify(courses)); }
+
+        function calculateTarget() {
+            const cgpa = parseFloat(document.getElementById('curr-cgpa').value);
+            const crd = parseFloat(document.getElementById('curr-credits').value);
+            const tar = parseFloat(document.getElementById('target-cgpa').value);
+            const rem = parseFloat(document.getElementById('remain-credits').value);
+
+            if(!cgpa || !tar || !rem) return alert("Simulation parameters incomplete!");
+
+            const req = ((tar * (crd + rem)) - (cgpa * crd)) / rem;
+            const resDiv = document.getElementById('estimate-result');
+            resDiv.classList.remove('hidden');
+
+            const isPossible = req <= 10;
+            
+            resDiv.innerHTML = `
+                <div class="glass-card p-8 rounded-3xl border-l-4 ${isPossible ? 'border-emerald-500' : 'border-red-500'}">
+                    <p class="text-xs font-bold opacity-40 uppercase">Required Average</p>
+                    <h3 class="text-5xl font-900 ${isPossible ? 'text-white' : 'text-red-500'}">${req.toFixed(2)}</h3>
+                    <p class="mt-4 opacity-70">${isPossible ? 'This target is mathematically within reach.' : 'This target exceeds the 10.0 cap.'}</p>
+                </div>
+                <div class="glass-card p-8 rounded-3xl">
+                    <h4 class="font-bold mb-4">Goal Breakdown</h4>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between"><span>Grade S (10):</span> <span class="font-bold">${Math.ceil(rem/4)} subjects</span></div>
+                        <div class="flex justify-between"><span>Grade A (9):</span> <span class="font-bold">${Math.floor(rem/4)} subjects</span></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function initCharts() {
+            const ctx1 = document.getElementById('trendChart').getContext('2d');
+            new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Current'],
+                    datasets: [{
+                        label: 'CGPA Growth',
+                        data: [7.8, 8.2, 8.1, document.getElementById('sgpa-display').innerText],
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16,185,129,0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: { scales: { y: { min: 0, max: 10 } }, plugins: { legend: { display: false } } }
+            });
+
+            const types = courses.reduce((acc, c) => { acc[c.type] = (acc[c.type] || 0) + c.credits; return acc; }, {});
+            const ctx2 = document.getElementById('gradeChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'polarArea',
+                data: {
+                    labels: Object.keys(types),
+                    datasets: [{
+                        data: Object.values(types),
+                        backgroundColor: ['#10b981', '#3b82f6', '#8b5cf6']
+                    }]
+                },
+                options: { plugins: { legend: { position: 'bottom' } } }
+            });
+        }
+
+        function openImportModal() { document.getElementById('import-modal').classList.remove('hidden'); }
+        function closeImportModal() { document.getElementById('import-modal').classList.add('hidden'); }
+        
+        function processImport() {
+            const lines = document.getElementById('import-area').value.split('\n');
+            lines.forEach(l => {
+                const [n, c, g] = l.split(',');
+                if(n && c) courses.push({ id: Date.now()+Math.random(), name: n.trim(), credits: parseFloat(c), grade: parseFloat(g||0), type: "Theory" });
+            });
+            renderCourses();
+            autoCalculate();
+            closeImportModal();
+        }
+
+        function downloadReport() {
+            const opt = { margin: 10, filename: 'Gradians_Report.pdf', html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4' } };
+            html2pdf().set(opt).from(document.getElementById('report-area')).save();
+        }
+
+        function clearAllData() {
+            if(confirm("Wipe all course data? This cannot be undone.")) {
+                courses = [];
+                renderCourses();
+                autoCalculate();
+            }
+        }
+
+        function handleGoogleLogin() {
+            alert("Cloud Sync Initialized: Your academic profile is now linked to mridul.vit@gmail.com");
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
